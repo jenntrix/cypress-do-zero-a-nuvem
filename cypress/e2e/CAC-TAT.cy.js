@@ -266,7 +266,7 @@ it('seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', 
 
   /* AULA 7 */
 
-it.only('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', () => {
+it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', () => {
   
   //cy.get('#privacy > a')
     cy.contains('a', 'Política de Privacidade')
