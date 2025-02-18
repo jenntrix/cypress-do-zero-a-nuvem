@@ -1,3 +1,5 @@
+
+Cypress._.times(3, () => {
 it('testa a página da política de privacidade de forma independente', () => {
 
     cy.visit('./src/privacy.html') //Isso e o q significa testar una pagina independente, visitando ela aparte.
@@ -7,4 +9,5 @@ it('testa a página da política de privacidade de forma independente', () => {
 
     cy.contains('p', 'Talking About Testing')
       .should('be.visible')
+})
 })

@@ -288,6 +288,110 @@ it('acessa a página da política de privacidade removendo o target e então cli
 
 })
 
+it('exibe mensagem por 3 segundos', () => {
+
+  cy.clock() // congela o relógio do navegador
+
+  cy.fillMandatoryFieldsAndSubmit() //No esta pasando nada entonces agarra el valor default que hice en data de John Doe.
+  cy.get('.success').should('be.visible')
+
+  cy.tick(3000)
+  cy.get('.success').should('not.be.visible')
+
+  cy.clock() //Congela de novo
+  cy.get('button[type="submit"]').click()
+  cy.get('.error').should('be.visible')
+
+  cy.tick(3000)
+  cy.get('.error').should('not.be.visible')
+
+})
+
+it('usando a função ._times()', () => {   //Tambem usado no privacyPolicy.cy.js
+
+  Cypress._.times(3, () => {
+      
+  cy.get('#firstName').type('Jenn')
+  cy.get('#lastName').type('Peres')
+  cy.get('#email').type('jennperes@supermail.com')
+  cy.get('#open-text-area').type('Legal')
+  cy.contains('button', 'Enviar').click()
+
+  cy.get('.success').should('be.visible')
+
+  cy.fillMandatoryFieldsAndSubmit() //No esta pasando nada entonces agarra el valor default que hice en data de John Doe.
+  cy.get('.success').should('be.visible')
+
+  })
+
+})
+
+it('exibe e oculta as mensagens de sucesso e erro usando .invoke()', () => {
+  cy.get('.success')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Mensagem enviada com sucesso.')
+    .invoke('hide')
+    .should('not.be.visible')
+  cy.get('.error')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Valide os campos obrigatórios!')
+    .invoke('hide')
+    .should('not.be.visible')
+})
+
+it('preenche o campo da área de texto usando o comando invoke', () => {
+
+  cy.get('#open-text-area')
+    .invoke('val','Super legal isso aqui gente')
+    .should('have.value', 'Super legal isso aqui gente')
+
+})
+
+it('faz uma requisição HTTP', () => {
+
+  /*cy.request({
+    url: 'https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html'
+  }).then((resp) => {
+    expect(resp.status).to.eq(200)
+    expect(resp.statusText).to.eq('OK')
+    expect(resp.body).to.contains('CAC TAT')
+  })*/
+
+  //Outra forma
+  cy.request('https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html')
+    .as('getRequest')
+    .its('status')
+    .should('be.equal',200)
+
+  cy.get('@getRequest')
+    .its('statusText')
+    .should('be.equal', 'OK')
+
+  cy.get('@getRequest')
+    .its('body')
+    .should('include', 'CAC TAT')
+
+})
+
+/* DESAFIO FINAL. AULA 13 */
+
+it('encontre o gato escondido', () => {
+  
+  cy.get('#cat')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+
+  cy.get('#title')
+    .invoke('text', 'CAT 🐈 TAT')
+
+  cy.get('#subtitle')
+    .invoke('text', 'Eu ❤️ gatos 🐱!')
+})
 
 }) 
 
